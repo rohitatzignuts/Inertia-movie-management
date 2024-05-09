@@ -1,6 +1,6 @@
 <script setup>
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
-import { Head } from "@inertiajs/vue3";
+import { Head, Link } from "@inertiajs/vue3";
 import { useForm } from "@inertiajs/vue3";
 import { router } from "@inertiajs/vue3";
 
@@ -34,7 +34,7 @@ const handleProductionDelete = async () => {
     <Head title="Productions" />
     <AuthenticatedLayout>
         <div>
-            <Head title="Create Organization" />
+            <Head title="Edit Production" />
             <div class="max-w-7xl mt-4 mx-auto sm:px-6 lg:px-8">
                 <h1 class="mb-8 text-3xl font-bold">
                     <span class="text-indigo-400 font-medium"
@@ -115,7 +115,7 @@ const handleProductionDelete = async () => {
                                 class="w-1/2 bg-red-400 p-2"
                                 @click="handleProductionDelete"
                             >
-                                Delete
+                                DELETE
                             </button>
                         </div>
                     </form>
@@ -127,7 +127,9 @@ const handleProductionDelete = async () => {
                 class="max-w-7xl mt-8 mx-auto sm:px-6 lg:px-8 pb-8"
             >
                 <hr class="my-6" />
-                <p class="text-2xl font-bold">Movies</p>
+                <p class="text-2xl font-bold underline pb-2">
+                    Production's Movies
+                </p>
                 <table class="w-full whitespace-nowrap border-2">
                     <thead>
                         <tr class="text-left font-bold">
@@ -146,7 +148,7 @@ const handleProductionDelete = async () => {
                             <td class="border-t">
                                 <Link
                                     class="flex items-center px-6 py-4 focus:text-indigo-500"
-                                    :href="`/productions/${movie.id}/edit`"
+                                    :href="`/movies/${movie.id}/edit`"
                                 >
                                     {{ movie.title }}
                                     <icon
@@ -159,7 +161,7 @@ const handleProductionDelete = async () => {
                             <td class="border-t">
                                 <Link
                                     class="flex items-center px-6 py-4"
-                                    :href="`/productions/${movie.id}/edit`"
+                                    :href="`/movies/${movie.id}/edit`"
                                     tabindex="-1"
                                 >
                                     {{ movie.genre }}
@@ -168,7 +170,7 @@ const handleProductionDelete = async () => {
                             <td class="border-t">
                                 <Link
                                     class="flex items-center px-6 py-4"
-                                    :href="`/productions/${movie.id}/edit`"
+                                    :href="`/movies/${movie.id}/edit`"
                                     tabindex="-1"
                                 >
                                     {{ movie.runtime }} Mins.
@@ -177,7 +179,7 @@ const handleProductionDelete = async () => {
                             <td class="border-t">
                                 <Link
                                     class="flex items-center px-6 py-4"
-                                    :href="`/productions/${production.id}/edit`"
+                                    :href="`/productions/${movie.id}/edit`"
                                     tabindex="-1"
                                 >
                                     {{ movie.released_in }}
@@ -186,7 +188,7 @@ const handleProductionDelete = async () => {
                             <td class="w-px border-t">
                                 <Link
                                     class="flex items-center px-4"
-                                    :href="`/productions/${movie.id}/edit`"
+                                    :href="`/movies/${movie.id}/edit`"
                                     tabindex="-1"
                                 >
                                     ▶

@@ -17,7 +17,7 @@ const productionCreateForm = useForm({
 
     <AuthenticatedLayout>
         <div>
-            <Head title="Create Organization" />
+            <Head title="Create Production" />
             <div class="max-w-7xl mt-4 mx-auto sm:px-6 lg:px-8">
                 <h1 class="mb-8 text-3xl font-bold">
                     <span class="text-indigo-400 font-medium"

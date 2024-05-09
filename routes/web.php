@@ -1,7 +1,9 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\MovieController;
 use App\Http\Controllers\ProductionController;
+use App\Http\Controllers\ActorController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -23,13 +25,35 @@ Route::get('/dashboard', function () {
     ->name('dashboard');
 
 // productions
-Route::middleware(['auth', 'verified'])->group(function () {
-    Route::get('/productions', [ProductionController::class, 'index'])->name('productions');
-    Route::get('/productions/create', [ProductionController::class, 'create'])->name('productions.create');
-    Route::post('/productions', [ProductionController::class, 'store'])->name('productions.store');
-    Route::get('/productions/{production}/edit', [ProductionController::class, 'edit'])->name('productions.edit');
-    Route::put('/productions/{production}', [ProductionController::class, 'update'])->name('productions.update');
-    Route::delete('/productions/{production}', [ProductionController::class, 'destroy'])->name('productions.destroy');
+Route::middleware(['auth', 'verified'])->prefix('productions')->group(function () {
+    Route::get('/', [ProductionController::class, 'index'])->name('productions');
+    Route::get('/all', [ProductionController::class, 'productions'])->name('productions.name');
+    Route::get('/create', [ProductionController::class, 'create'])->name('productions.create');
+    Route::post('/', [ProductionController::class, 'store'])->name('productions.store');
+    Route::get('/{production}/edit', [ProductionController::class, 'edit'])->name('productions.edit');
+    Route::put('/{production}', [ProductionController::class, 'update'])->name('productions.update');
+    Route::delete('/{production}', [ProductionController::class, 'destroy'])->name('productions.destroy');
+});
+
+// movies
+Route::middleware(['auth', 'verified'])->prefix('movies')->group(function () {
+    Route::get('/', [MovieController::class, 'index'])->name('movies');
+    Route::get('/create', [MovieController::class, 'create'])->name('movies.create');
+    Route::post('/', [MovieController::class, 'store'])->name('movies.store');
+    Route::get('/{movie}/edit', [MovieController::class, 'edit'])->name('movies.edit');
+    Route::put('/{movie}', [MovieController::class, 'update'])->name('movies.update');
+    Route::delete('/{movie}', [MovieController::class, 'destroy'])->name('movies.destroy');
+});
+
+// actors
+Route::middleware(['auth', 'verified'])->prefix('actors')->group(function () {
+    Route::get('/', [ActorController::class, 'index'])->name('actors');
+    Route::get('/all', [ActorController::class, 'allActors'])->name('actors.name');
+    Route::get('/create', [ActorController::class, 'create'])->name('actors.create');
+    Route::post('/', [ActorController::class, 'store'])->name('actors.store');
+    Route::get('/{actor}/edit', [ActorController::class, 'edit'])->name('actors.edit');
+    Route::put('/{actor}', [ActorController::class, 'update'])->name('actors.update');
+    Route::delete('/{actor}', [ActorController::class, 'destroy'])->name('actors.destroy');
 });
 
 Route::middleware('auth')->group(function () {

@@ -11,6 +11,14 @@ class ProductionController extends Controller
     public function index()
     {
         try {
+            // $productions = Production::paginate(5)->through(function ($production) {
+            //     return [
+            //         'Name' => $production->name,
+            //         'City' => $production->city,
+            //         'Email' => $production->email,
+            //         'Phone' => $production->phone,
+            //     ];
+            // });
             $productions = Production::all();
             return Inertia::render('Productions/index', [
                 'productions' => $productions,
@@ -19,6 +27,17 @@ class ProductionController extends Controller
             return response()->json($th, $headers);
         }
     }
+
+    //     $items = Item::paginate(15)->through(function ($item) {
+    //     return [
+    //         'id' => $item->id,
+    //         'name' => $item->name,
+    //         // etc
+    //     ];
+    // });
+
+    // return Inertia::render('Rentals/Items', ['items' => $items]);
+
     public function create()
     {
         return Inertia::render('Productions/create');
@@ -68,5 +87,11 @@ class ProductionController extends Controller
         $production = Production::findOrFail($id);
         $production->delete();
         return Redirect::route('productions')->with('success', 'Production deleted.');
+    }
+
+    public function productions()
+    {
+        $productions = Production::pluck('name');
+        return $productions;
     }
 }
