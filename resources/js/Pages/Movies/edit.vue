@@ -1,14 +1,21 @@
-<script setup>
+<script setup lang="ts">
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import { Head, Link } from "@inertiajs/vue3";
 import { useForm } from "@inertiajs/vue3";
 import { router } from "@inertiajs/vue3";
-import { ref, onMounted } from "vue";
+import { ref, onMounted, watchEffect } from "vue";
 import axios from "axios";
 
 const props = defineProps({
     movie: Object,
 });
+
+const newActor = ref<string>("");
+const actors = ref([]);
+
+const editedActors = ref(
+    props.movie.actors.length === 0 ? [] : props.movie.actors
+);
 
 const editForm = useForm({
     title: props.movie.title,
@@ -16,7 +23,21 @@ const editForm = useForm({
     released_in: props.movie.released_in,
     runtime: props.movie.runtime,
     genre: JSON.parse(props.movie.genre).toString(),
+    actors: editedActors.value,
 });
+
+// Add a new actor to the editedActors array if it doesn't already exist
+const addItem = () => {
+    if (!editedActors.value.find((actor) => actor.id === newActor.value.id)) {
+        editedActors.value.push(newActor.value);
+        newActor.value = "";
+    }
+};
+
+// Remove an actor from the editedActors array
+const removeChip = (index: number) => {
+    editedActors.value.splice(index, 1);
+};
 
 // handle movie model delete
 const handlemovieDelete = async () => {
@@ -30,6 +51,21 @@ const handlemovieDelete = async () => {
         }
     }
 };
+// fetch all the actor's name
+const actorsNames = () => {
+    axios.get("/actors/all").then((res) => {
+        actors.value = res.data;
+    });
+};
+
+// get productions and actors name asa component mounts
+onMounted(() => {
+    actorsNames();
+});
+
+watchEffect(() => {
+    editForm.actors = editedActors.value;
+});
 </script>
 
 <template>
@@ -81,6 +117,36 @@ const handlemovieDelete = async () => {
                             />
                         </div>
                         <div class="flex gap-5 my-4">
+                            <!-- edit actors feild -->
+                            <div>
+                                <div
+                                    v-for="(actor, index) in editedActors"
+                                    :key="index"
+                                    class="chip"
+                                >
+                                    {{ actor.name }}
+                                    <span
+                                        @click="removeChip(index)"
+                                        class="close"
+                                        >&times;</span
+                                    >
+                                </div>
+                                <!-- movie actors select feild  -->
+                                <select @change="addItem" v-model="newActor">
+                                    <option disabled value="">
+                                        Select Actors
+                                    </option>
+                                    <option
+                                        v-for="actor in actors"
+                                        :key="actor"
+                                        :value="actor"
+                                    >
+                                        {{ actor.name }}
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="flex gap-5 my-4">
                             <!-- edit release year feild -->
                             <input
                                 v-model="editForm.released_in"
@@ -92,7 +158,6 @@ const handlemovieDelete = async () => {
                             <!-- edit/select genre feild -->
                             <select
                                 v-model="editForm.genre"
-                                type="text"
                                 placeholder="genre"
                                 class="w-1/2"
                                 required
@@ -197,7 +262,7 @@ const handlemovieDelete = async () => {
                                     </Link>
                                 </td>
                             </tr>
-                            <tr v-if="actor && actor.length === 0">
+                            <tr v-if="actors && actors.length === 0">
                                 <td class="px-6 py-4 border-t" colspan="4">
                                     No actors found.
                                 </td>
@@ -209,3 +274,20 @@ const handlemovieDelete = async () => {
         </div>
     </AuthenticatedLayout>
 </template>
+
+<style scoped>
+.chip {
+    display: inline-block;
+    padding: 0.3rem 0.6rem;
+    margin: 0.2rem;
+    background-color: #f1f1f1;
+    border-radius: 0.2rem;
+}
+
+.close {
+    margin-left: 0.3rem;
+    color: #888;
+    font-weight: bold;
+    cursor: pointer;
+}
+</style>

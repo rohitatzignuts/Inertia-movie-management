@@ -213,7 +213,12 @@ const handleProductionDelete = async () => {
                                 </Link>
                             </td>
                         </tr>
-                        <tr v-if="movie && movie.length === 0">
+                        <tr
+                            v-if="
+                                props.production.movies &&
+                                props.production.movies.length === 0
+                            "
+                        >
                             <td class="px-6 py-4 border-t" colspan="4">
                                 No movies found.
                             </td>

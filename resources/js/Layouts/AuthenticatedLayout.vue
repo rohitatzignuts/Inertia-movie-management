@@ -162,6 +162,24 @@ const showingNavigationDropdown = ref(false);
                         >
                             Dashboard
                         </ResponsiveNavLink>
+                        <ResponsiveNavLink
+                            :href="route('productions')"
+                            :active="route().current('productions')"
+                        >
+                            Productions
+                        </ResponsiveNavLink>
+                        <ResponsiveNavLink
+                            :href="route('movies')"
+                            :active="route().current('movies')"
+                        >
+                            Movies
+                        </ResponsiveNavLink>
+                        <ResponsiveNavLink
+                            :href="route('actors')"
+                            :active="route().current('actors')"
+                        >
+                            Actors
+                        </ResponsiveNavLink>
                     </div>
 
                     <!-- Responsive Settings Options -->

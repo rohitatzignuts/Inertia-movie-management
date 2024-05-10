@@ -9,7 +9,7 @@ defineProps<{
 
 <template>
     <div v-if="links.length > 3">
-        <div class="flex flex-wrap -mb-1">
+        <div class="flex flex-wrap">
             <!-- Loop through each link in the 'links' array -->
             <template v-for="(link, k) in links" :key="k">
                 <!-- If the link URL is null, display a non-clickable link -->

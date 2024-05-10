@@ -86,7 +86,6 @@ onMounted(() => {
                             <!-- movie genre select feild  -->
                             <select
                                 v-model="movieCreateForm.genre"
-                                type="text"
                                 placeholder="genre"
                                 class="w-1/2"
                                 required
@@ -120,7 +119,7 @@ onMounted(() => {
                                     :key="index"
                                     class="chip"
                                 >
-                                    {{ item }}
+                                    {{ item.name }}
                                     <span
                                         @click="removeChip(index)"
                                         class="close"
@@ -130,14 +129,14 @@ onMounted(() => {
                                 <!-- movie actors select feild  -->
                                 <select @change="addItem" v-model="newActor">
                                     <option disabled value="">
-                                        Select Item
+                                        Select Actors
                                     </option>
                                     <option
                                         v-for="actor in actors"
                                         :key="actor"
                                         :value="actor"
                                     >
-                                        {{ actor }}
+                                        {{ actor.name }}
                                     </option>
                                 </select>
                             </div>

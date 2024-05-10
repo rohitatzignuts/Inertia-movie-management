@@ -75,8 +75,11 @@ class MovieController extends Controller
         ]);
 
         $production = Production::where('name', $request->input('production'))->firstOrFail();
+        $actorNames = array_map(function ($actor) {
+            return $actor['name'];
+        }, $request->input('actors'));
 
-        $actors = Actor::whereIn('name', $request->input('actors'))->pluck('id');
+        $actorIds = Actor::whereIn('name', $actorNames)->pluck('id')->toArray();
 
         $movie = Movie::create([
             'title' => $request->input('title'),
@@ -88,7 +91,7 @@ class MovieController extends Controller
         ]);
 
         // Attach actor IDs to the movie
-        $movie->actors()->attach($actors);
+        $movie->actors()->attach($actorIds);
 
         return Redirect::route('movies')->with('success', 'Movie created.');
     }
@@ -122,14 +125,30 @@ class MovieController extends Controller
     public function update($id, Request $request)
     {
         $movie = Movie::findOrFail($id);
+
         $request->validate([
             'title' => 'required|string',
             'plot' => 'required|string',
             'genre' => 'required|string',
             'released_in' => 'required|integer|between:1980,2024',
             'runtime' => 'required|integer|between:30,350',
+            'actors' => 'required|array',
         ]);
+
+        // Extract actor names from the array of objects
+        $actorNames = array_map(function ($actor) {
+            return $actor['name'];
+        }, $request->input('actors'));
+
+        // Find actor IDs based on names
+        $actorIds = Actor::whereIn('name', $actorNames)->pluck('id')->toArray();
+
+        // Update the movie with the new data
         $movie->update($request->only('title', 'plot', 'released_in', 'runtime') + ['genre' => json_encode($request->input('genre'))]);
+
+        // Sync the actors for the movie
+        $movie->actors()->sync($actorIds);
+
         return Redirect::route('movies')->with('success', 'Movie updated.');
     }
 

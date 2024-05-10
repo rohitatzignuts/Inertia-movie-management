@@ -27,7 +27,7 @@ class DatabaseSeeder extends Seeder
 
         // Attach actors to movies
         foreach ($movies as $movie) {
-            $actorsIds = $actors->random(rand(1, 2))->pluck('id')->toArray();
+            $actorsIds = $actors->random(rand(1, 3))->pluck('id')->toArray();
             $movie->actors()->attach($actorsIds);
         }
     }

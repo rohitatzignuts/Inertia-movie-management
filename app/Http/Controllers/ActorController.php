@@ -128,7 +128,7 @@ class ActorController extends Controller
     {
         $actor = Actor::findOrFail($id);
         $actor->delete();
-        return Redirect::route('actors');
+        return Redirect::route('actors')->with('success', 'Actor Deleted.');
     }
 
     /**
@@ -141,7 +141,7 @@ class ActorController extends Controller
      */
     public function allActors()
     {
-        $actors = Actor::pluck('name');
+        $actors = Actor::all();
         return $actors;
     }
 }

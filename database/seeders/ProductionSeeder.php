@@ -12,6 +12,6 @@ class ProductionSeeder extends Seeder
      */
     public function run(): void
     {
-        \App\Models\Production::factory(5)->create();
+        \App\Models\Production::factory(15)->create();
     }
 }
