@@ -24,7 +24,7 @@ Route::get('/dashboard', function () {
     ->middleware(['auth', 'verified'])
     ->name('dashboard');
 
-// productions
+// productions routes
 Route::middleware(['auth', 'verified'])->prefix('productions')->group(function () {
     Route::get('/', [ProductionController::class, 'index'])->name('productions');
     Route::get('/all', [ProductionController::class, 'productions'])->name('productions.name');
@@ -35,7 +35,7 @@ Route::middleware(['auth', 'verified'])->prefix('productions')->group(function (
     Route::delete('/{production}', [ProductionController::class, 'destroy'])->name('productions.destroy');
 });
 
-// movies
+// movies routes
 Route::middleware(['auth', 'verified'])->prefix('movies')->group(function () {
     Route::get('/', [MovieController::class, 'index'])->name('movies');
     Route::get('/create', [MovieController::class, 'create'])->name('movies.create');
@@ -45,7 +45,7 @@ Route::middleware(['auth', 'verified'])->prefix('movies')->group(function () {
     Route::delete('/{movie}', [MovieController::class, 'destroy'])->name('movies.destroy');
 });
 
-// actors
+// actors routes
 Route::middleware(['auth', 'verified'])->prefix('actors')->group(function () {
     Route::get('/', [ActorController::class, 'index'])->name('actors');
     Route::get('/all', [ActorController::class, 'allActors'])->name('actors.name');
@@ -56,6 +56,7 @@ Route::middleware(['auth', 'verified'])->prefix('actors')->group(function () {
     Route::delete('/{actor}', [ActorController::class, 'destroy'])->name('actors.destroy');
 });
 
+// profile route
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');

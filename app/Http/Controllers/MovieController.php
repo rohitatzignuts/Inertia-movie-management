@@ -11,19 +11,57 @@ use Illuminate\Support\Facades\Redirect;
 
 class MovieController extends Controller
 {
-    public function index()
+    /**
+     * Display listing of all the movies
+     *
+     * @method GET
+     * @author Rohit Vispute (Zignuts Technolab)
+     * @route /movies
+     * @authentication Requires user authentication
+     * @middleware sanctum:auth,verified
+     * @param \Illuminate\Http\Request $request
+     * @return Inertia::render('page')
+     */
+    public function index(Request $request)
     {
-        $movies = Movie::all();
+        $request->validate([
+            'searchValue' => 'nullable|string',
+        ]);
+        $searchValue = $request->input('searchValue');
+        $query = Movie::orderBy('id', 'desc');
+        if ($searchValue) {
+            $query->where('title', 'like', '%' . $searchValue . '%');
+        }
+        $movies = $query->paginate(5);
         return Inertia::render('Movies/index', [
             'movies' => $movies,
         ]);
     }
 
+    /**
+     * Display the create movie page
+     * @method GET
+     * @author Rohit Vispute (Zignuts Technolab)
+     * @route /movies/create
+     * @authentication Requires user authentication
+     * @middleware sanctum:auth,verified
+     * @param \Illuminate\Http\Request $request
+     * @return Inertia::render('page')
+     */
     public function create()
     {
         return Inertia::render('Movies/create');
     }
 
+    /**
+     * store a newly created movie
+     * @method POST
+     * @author Rohit Vispute (Zignuts Technolab)
+     * @route /movies
+     * @authentication Requires user authentication
+     * @middleware sanctum:auth,verified
+     * @param \Illuminate\Http\Request $request
+     */
     public function store(Request $request)
     {
         $request->validate([
@@ -55,6 +93,15 @@ class MovieController extends Controller
         return Redirect::route('movies')->with('success', 'Movie created.');
     }
 
+    /**
+     * Display the edit+delte page for a movie
+     * @method GET
+     * @author Rohit Vispute (Zignuts Technolab)
+     * @route /movies/{movie}/edit
+     * @authentication Requires user authentication
+     * @middleware sanctum:auth,verified
+     * @param Integer $id
+     */
     public function edit($id)
     {
         $movie = Movie::with('actors')->findOrFail($id);
@@ -63,6 +110,15 @@ class MovieController extends Controller
         ]);
     }
 
+    /**
+     * update the movie data
+     * @method PUT
+     * @author Rohit Vispute (Zignuts Technolab)
+     * @route /movies/{movie}
+     * @authentication Requires user authentication
+     * @middleware sanctum:auth,verified
+     * @param Integer $id, Request $request
+     */
     public function update($id, Request $request)
     {
         $movie = Movie::findOrFail($id);
@@ -77,6 +133,15 @@ class MovieController extends Controller
         return Redirect::route('movies')->with('success', 'Movie updated.');
     }
 
+    /**
+     * delete the movie model
+     * @method DELETE
+     * @author Rohit Vispute (Zignuts Technolab)
+     * @route /movies/{movie}
+     * @authentication Requires user authentication
+     * @middleware sanctum:auth,verified
+     * @param Integer $id
+     */
     public function destroy($id)
     {
         $movie = Movie::findOrFail($id);

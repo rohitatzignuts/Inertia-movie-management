@@ -20,18 +20,21 @@ const movieCreateForm = useForm({
     production: "production",
 });
 
+// fetch all the production name
 const productionNames = () => {
     axios.get("/productions/all").then((res) => {
         productions.value = res.data;
     });
 };
 
+// fetch all the actor's name
 const actorsNames = () => {
     axios.get("/actors/all").then((res) => {
         actors.value = res.data;
     });
 };
 
+// store actors name in the actors array
 const addItem = () => {
     if (newActor.value && !movieCreateForm.actors.includes(newActor.value)) {
         movieCreateForm.actors.push(newActor.value);
@@ -39,10 +42,12 @@ const addItem = () => {
     }
 };
 
+// remove actors name from the actors array
 const removeChip = (index: number) => {
     movieCreateForm.actors.splice(index, 1);
 };
 
+// get productions and actors name asa component mounts
 onMounted(() => {
     productionNames();
     actorsNames();
@@ -51,15 +56,16 @@ onMounted(() => {
 
 <template>
     <Head title="Movies" />
-
     <AuthenticatedLayout>
         <div>
             <Head title="Create Movie" />
+            <!-- main content  -->
             <div class="max-w-7xl mt-4 mx-auto sm:px-6 lg:px-8">
                 <h1 class="mb-8 text-3xl font-bold">
                     <span class="text-indigo-400 font-medium">Movies/</span>
                     Create
                 </h1>
+                <!-- create movie form -->
                 <div class="border p-5">
                     <form
                         action="post"
@@ -67,6 +73,7 @@ onMounted(() => {
                         @submit.prevent="movieCreateForm.post('/movies')"
                     >
                         <div class="flex gap-5 my-4">
+                            <!-- movie title input feild  -->
                             <input
                                 v-model="movieCreateForm.title"
                                 type="text"
@@ -76,6 +83,7 @@ onMounted(() => {
                             />
                         </div>
                         <div class="flex gap-5 my-4">
+                            <!-- movie genre select feild  -->
                             <select
                                 v-model="movieCreateForm.genre"
                                 type="text"
@@ -92,6 +100,7 @@ onMounted(() => {
                                 <option value="Drama">Drama</option>
                             </select>
 
+                            <!-- movie release year input feild  -->
                             <input
                                 v-model="movieCreateForm.releasedIn"
                                 type="number"
@@ -118,6 +127,7 @@ onMounted(() => {
                                         >&times;</span
                                     >
                                 </div>
+                                <!-- movie actors select feild  -->
                                 <select @change="addItem" v-model="newActor">
                                     <option disabled value="">
                                         Select Item
@@ -133,6 +143,7 @@ onMounted(() => {
                             </div>
                         </div>
 
+                        <!-- movie plot input feild  -->
                         <div class="flex gap-5 my-4">
                             <input
                                 v-model="movieCreateForm.plot"
@@ -143,6 +154,7 @@ onMounted(() => {
                             />
                         </div>
                         <div class="flex gap-5 my-4">
+                            <!-- movie runtime input feild  -->
                             <input
                                 v-model="movieCreateForm.runtime"
                                 type="number"
@@ -152,6 +164,7 @@ onMounted(() => {
                                 class="w-1/2"
                                 required
                             />
+                            <!-- movie production select feild  -->
                             <select
                                 class="w-1/2"
                                 v-model="movieCreateForm.production"
@@ -168,6 +181,7 @@ onMounted(() => {
                                 </option>
                             </select>
                         </div>
+                        <!-- action buttons -->
                         <div class="flex gap-5 my-4 bg-gray-200 py-4">
                             <button
                                 class="w-1/2 bg-indigo-400 p-2"

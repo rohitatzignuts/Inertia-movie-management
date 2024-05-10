@@ -11,15 +11,17 @@ const props = defineProps({
 });
 
 const delteForm = useForm({});
+
 const editForm = useForm({
     name: props.actor.name,
     email: props.actor.email,
     contact: props.actor.contact,
 });
 
-const handleActorDelete = async () => {
+// delete the actor's model
+const handleActorDelete = () => {
     try {
-        await delteForm.delete(`/actors/${props.actor.id}`);
+        delteForm.delete(`/actors/${props.actor.id}`);
     } catch (error) {
         console.error(error);
     }
@@ -31,11 +33,13 @@ const handleActorDelete = async () => {
     <AuthenticatedLayout>
         <div>
             <Head name="Edit actor" />
+            <!-- main content  -->
             <div class="max-w-7xl mt-4 mx-auto sm:px-6 lg:px-8">
                 <h1 class="mb-8 text-3xl font-bold">
                     <span class="text-indigo-400 font-medium">actors/</span>
                     {{ editForm.name }}
                 </h1>
+                <!-- actor info edit form  -->
                 <div class="border p-5">
                     <form
                         action="post"
@@ -43,6 +47,7 @@ const handleActorDelete = async () => {
                         @submit.prevent="editForm.put(`/actors/${actor.id}`)"
                     >
                         <div class="flex gap-5 my-4">
+                            <!-- edit name feild  -->
                             <input
                                 v-model="editForm.name"
                                 type="text"
@@ -50,6 +55,7 @@ const handleActorDelete = async () => {
                                 class="w-1/2"
                                 required
                             />
+                            <!-- edit email feild  -->
                             <input
                                 v-model="editForm.email"
                                 type="text"
@@ -59,6 +65,7 @@ const handleActorDelete = async () => {
                             />
                         </div>
                         <div class="flex gap-5 my-4">
+                            <!-- edit contact feild  -->
                             <input
                                 v-model="editForm.contact"
                                 type="text"
@@ -67,16 +74,20 @@ const handleActorDelete = async () => {
                                 required
                             />
                         </div>
+                        <!-- action buttons  -->
                         <div class="flex gap-5 my-4 bg-gray-200 py-4">
+                            <!-- edit action buttton  -->
                             <button
                                 class="w-1/2 bg-indigo-400 p-2"
                                 type="submit"
                             >
                                 EDIT
                             </button>
+                            <!-- reset action buttton  -->
                             <button class="w-1/2 bg-red-200 p-2" type="reset">
                                 RESET
                             </button>
+                            <!-- delete action buttton  -->
                             <button
                                 class="w-1/2 bg-red-400 p-2"
                                 @click="handleActorDelete"
@@ -87,6 +98,7 @@ const handleActorDelete = async () => {
                     </form>
                 </div>
                 <!-- display movies of the actor  -->
+                <!-- only show the list if available  -->
                 <div
                     v-if="props.actor.movies.length > 0"
                     class="max-w-7xl mt-8 mx-auto sm:px-6 lg:px-8 pb-8"
@@ -95,7 +107,9 @@ const handleActorDelete = async () => {
                     <p class="text-2xl font-bold underline pb-2">
                         Actor's Movies
                     </p>
+                    <!-- tablular listing of actor's movie  -->
                     <table class="w-full whitespace-nowrap border-2">
+                        <!-- table heading  -->
                         <thead>
                             <tr class="text-left font-bold">
                                 <th class="pb-4 pt-6 px-6">Title</th>
@@ -104,25 +118,23 @@ const handleActorDelete = async () => {
                                 <th class="pb-4 pt-6 px-6">Released In</th>
                             </tr>
                         </thead>
+                        <!-- table body  -->
                         <tbody>
                             <tr
                                 v-for="movie in props.actor.movies"
                                 :key="movie.id"
                                 class="hover:bg-gray-100 focus-within:bg-gray-100"
                             >
+                                <!-- movie title  -->
                                 <td class="border-t">
                                     <Link
                                         class="flex items-center px-6 py-4 focus:text-indigo-500"
                                         :href="`/movies/${movie.id}/edit`"
                                     >
                                         {{ movie.title }}
-                                        <icon
-                                            v-if="actor.deleted_at"
-                                            name="trash"
-                                            class="shrink-0 ml-2 w-3 h-3 fill-gray-400"
-                                        />
                                     </Link>
                                 </td>
+                                <!-- movie genre  -->
                                 <td class="border-t">
                                     <Link
                                         class="flex items-center px-6 py-4"
@@ -132,6 +144,7 @@ const handleActorDelete = async () => {
                                         {{ movie.genre }}
                                     </Link>
                                 </td>
+                                <!-- movie runtime  -->
                                 <td class="border-t">
                                     <Link
                                         class="flex items-center px-6 py-4"
@@ -141,15 +154,17 @@ const handleActorDelete = async () => {
                                         {{ movie.runtime }} Mins.
                                     </Link>
                                 </td>
+                                <!-- movie released in -->
                                 <td class="border-t">
                                     <Link
                                         class="flex items-center px-6 py-4"
                                         :href="`/movies/${movie.id}/edit`"
                                         tabindex="-1"
                                     >
-                                        {{ movie.released_in }} Mins.
+                                        {{ movie.released_in }}
                                     </Link>
                                 </td>
+                                <!-- movie edit/view link  -->
                                 <td class="w-px border-t">
                                     <Link
                                         class="flex items-center px-4"

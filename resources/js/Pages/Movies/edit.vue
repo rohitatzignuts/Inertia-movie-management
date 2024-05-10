@@ -18,6 +18,7 @@ const editForm = useForm({
     genre: JSON.parse(props.movie.genre).toString(),
 });
 
+// handle movie model delete
 const handlemovieDelete = async () => {
     if (confirm("Are you sure you want to delete this movie?")) {
         try {
@@ -36,11 +37,13 @@ const handlemovieDelete = async () => {
     <AuthenticatedLayout>
         <div>
             <Head title="Edit Movie" />
+            <!-- main content  -->
             <div class="max-w-7xl mt-4 mx-auto sm:px-6 lg:px-8">
                 <h1 class="mb-8 text-3xl font-bold">
                     <span class="text-indigo-400 font-medium">movies/</span>
                     {{ editForm.title }}
                 </h1>
+                <!-- update movie model form  -->
                 <div class="border p-5">
                     <form
                         action="post"
@@ -48,6 +51,7 @@ const handlemovieDelete = async () => {
                         @submit.prevent="editForm.put(`/movies/${movie.id}`)"
                     >
                         <div class="flex gap-5 my-4">
+                            <!-- edit title feild -->
                             <input
                                 v-model="editForm.title"
                                 type="text"
@@ -55,6 +59,7 @@ const handlemovieDelete = async () => {
                                 class="w-1/2"
                                 required
                             />
+                            <!-- edit runtime feild -->
                             <input
                                 v-model="editForm.runtime"
                                 type="number"
@@ -66,6 +71,7 @@ const handlemovieDelete = async () => {
                             />
                         </div>
                         <div class="flex gap-5 my-4">
+                            <!-- edit plot feild -->
                             <input
                                 v-model="editForm.plot"
                                 type="text"
@@ -75,6 +81,7 @@ const handlemovieDelete = async () => {
                             />
                         </div>
                         <div class="flex gap-5 my-4">
+                            <!-- edit release year feild -->
                             <input
                                 v-model="editForm.released_in"
                                 type="number"
@@ -82,6 +89,7 @@ const handlemovieDelete = async () => {
                                 class="w-1/2"
                                 required
                             />
+                            <!-- edit/select genre feild -->
                             <select
                                 v-model="editForm.genre"
                                 type="text"
@@ -98,6 +106,7 @@ const handlemovieDelete = async () => {
                                 <option value="Drama">Drama</option>
                             </select>
                         </div>
+                        <!-- action buttons  -->
                         <div class="flex gap-5 my-4 bg-gray-200 py-4">
                             <button
                                 class="w-1/2 bg-indigo-400 p-2"
@@ -126,7 +135,9 @@ const handlemovieDelete = async () => {
                     <p class="text-2xl font-bold underline pb-2">
                         Movie's Actors
                     </p>
+                    <!-- actors tabluler listing  -->
                     <table class="w-full whitespace-nowrap border-2">
+                        <!-- table head  -->
                         <thead>
                             <tr class="text-left font-bold">
                                 <th class="pb-4 pt-6 px-6">Name</th>
@@ -134,25 +145,28 @@ const handlemovieDelete = async () => {
                                 <th class="pb-4 pt-6 px-6">Contact</th>
                             </tr>
                         </thead>
+                        <!-- table body  -->
                         <tbody>
                             <tr
                                 v-for="actor in props.movie.actors"
                                 :key="actor.id"
                                 class="hover:bg-gray-100 focus-within:bg-gray-100"
                             >
+                                <!-- actor name  -->
                                 <td class="border-t">
                                     <Link
                                         class="flex items-center px-6 py-4 focus:text-indigo-500"
                                         :href="`/actors/${actor.id}/edit`"
                                     >
                                         {{ actor.name }}
-                                        <icon
+                                        <!-- <icon
                                             v-if="actor.deleted_at"
                                             name="trash"
                                             class="shrink-0 ml-2 w-3 h-3 fill-gray-400"
-                                        />
+                                        /> -->
                                     </Link>
                                 </td>
+                                <!-- actor email  -->
                                 <td class="border-t">
                                     <Link
                                         class="flex items-center px-6 py-4"
@@ -162,15 +176,17 @@ const handlemovieDelete = async () => {
                                         {{ actor.email }}
                                     </Link>
                                 </td>
+                                <!-- actor contact  -->
                                 <td class="border-t">
                                     <Link
                                         class="flex items-center px-6 py-4"
                                         :href="`/actors/${actor.id}/edit`"
                                         tabindex="-1"
                                     >
-                                        {{ actor.contact }} Mins.
+                                        {{ actor.contact }}
                                     </Link>
                                 </td>
+                                <!-- actor edit/view link  -->
                                 <td class="w-px border-t">
                                     <Link
                                         class="flex items-center px-4"

@@ -2,6 +2,7 @@
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import { Head } from "@inertiajs/vue3";
 import { useForm } from "@inertiajs/vue3";
+
 const productionCreateForm = useForm({
     name: null,
     email: null,
@@ -14,10 +15,10 @@ const productionCreateForm = useForm({
 
 <template>
     <Head title="Productions" />
-
     <AuthenticatedLayout>
         <div>
             <Head title="Create Production" />
+            <!-- main content  -->
             <div class="max-w-7xl mt-4 mx-auto sm:px-6 lg:px-8">
                 <h1 class="mb-8 text-3xl font-bold">
                     <span class="text-indigo-400 font-medium"
@@ -25,6 +26,7 @@ const productionCreateForm = useForm({
                     >
                     Create
                 </h1>
+                <!-- preduction create form  -->
                 <div class="border p-5">
                     <form
                         action="post"
@@ -34,6 +36,7 @@ const productionCreateForm = useForm({
                         "
                     >
                         <div class="flex gap-5 my-4">
+                            <!-- production name input feild  -->
                             <input
                                 v-model="productionCreateForm.name"
                                 type="text"
@@ -41,6 +44,7 @@ const productionCreateForm = useForm({
                                 class="w-1/2"
                                 required
                             />
+                            <!-- production email input feild  -->
                             <input
                                 v-model="productionCreateForm.email"
                                 type="email"
@@ -50,6 +54,7 @@ const productionCreateForm = useForm({
                             />
                         </div>
                         <div class="flex gap-5 my-4">
+                            <!-- production phone input feild  -->
                             <input
                                 v-model="productionCreateForm.phone"
                                 type="text"
@@ -57,6 +62,7 @@ const productionCreateForm = useForm({
                                 class="w-1/2"
                                 required
                             />
+                            <!-- production address input feild  -->
                             <input
                                 v-model="productionCreateForm.address"
                                 type="text"
@@ -66,6 +72,7 @@ const productionCreateForm = useForm({
                             />
                         </div>
                         <div class="flex gap-5 my-4">
+                            <!-- production city input feild  -->
                             <input
                                 v-model="productionCreateForm.city"
                                 type="text"
@@ -73,6 +80,7 @@ const productionCreateForm = useForm({
                                 class="w-1/2"
                                 required
                             />
+                            <!-- production contry select feild  -->
                             <select
                                 class="w-1/2"
                                 v-model="productionCreateForm.country"
@@ -84,6 +92,7 @@ const productionCreateForm = useForm({
                                 <option value="AUS">AUS</option>
                             </select>
                         </div>
+                        <!-- action buttons  -->
                         <div class="flex gap-5 my-4 bg-gray-200 py-4">
                             <button
                                 class="w-1/2 bg-indigo-400 p-2"

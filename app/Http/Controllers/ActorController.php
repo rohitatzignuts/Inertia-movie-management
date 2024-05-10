@@ -11,19 +11,58 @@ use Illuminate\Validation\Rule;
 
 class ActorController extends Controller
 {
-    public function index()
+    /**
+     * Display a listing of the actors
+     *
+     * @method GET
+     * @author Rohit Vispute (Zignuts Technolab)
+     * @route /actors
+     * @authentication Requires user authentication
+     * @middleware sanctum:auth,verified
+     * @param \Illuminate\Http\Request $request
+     * @return Inertia::render('page')
+     */
+    public function index(Request $request)
     {
-        $actors = Actor::all();
+        $request->validate([
+            'searchValue' => 'nullable|string',
+        ]);
+        $searchValue = $request->input('searchValue');
+        $query = Actor::orderBy('id', 'desc');
+        if ($searchValue) {
+            $query->where('name', 'like', '%' . $searchValue . '%');
+        }
+        $actors = $query->paginate(5);
         return Inertia::render('Actors/index', [
             'actors' => $actors,
         ]);
     }
 
+    /**
+     * Display actors create page
+     *
+     * @method GET
+     * @author Rohit Vispute (Zignuts Technolab)
+     * @route /actors/create
+     * @authentication Requires user authentication
+     * @middleware sanctum:auth,verified
+     * @return Inertia::render('page')
+     */
     public function create()
     {
         return Inertia::render('Actors/create');
     }
 
+    /**
+     * Store a new poduction
+     *
+     * @method POST
+     * @author Rohit Vispute (Zignuts Technolab)
+     * @route /actors/store
+     * @authentication Requires user authentication
+     * @middleware sanctum:auth,verified
+     * @param \Illuminate\Http\Request $request
+     */
     public function store(Request $request)
     {
         $request->validate([
@@ -35,6 +74,16 @@ class ActorController extends Controller
         return Redirect::route('actors')->with('success', 'Actor created.');
     }
 
+    /**
+     * Display actors edit+delete page
+     *
+     * @method GET
+     * @author Rohit Vispute (Zignuts Technolab)
+     * @route /actors/{actor}/edit
+     * @authentication Requires user authentication
+     * @middleware sanctum:auth,verified
+     * @param Integet $id
+     */
     public function edit($id)
     {
         $actor = Actor::with('movies')->findOrFail($id);
@@ -43,6 +92,16 @@ class ActorController extends Controller
         ]);
     }
 
+    /**
+     * update the actor data
+     *
+     * @method PUT
+     * @author Rohit Vispute (Zignuts Technolab)
+     * @route /actors/{actor}
+     * @authentication Requires user authentication
+     * @middleware sanctum:auth,verified
+     * @param Integet $id
+     */
     public function update($id, Request $request)
     {
         $actor = Actor::findOrFail($id);
@@ -55,6 +114,16 @@ class ActorController extends Controller
         return Redirect::route('actors')->with('success', 'Actor updated.');
     }
 
+    /**
+     * delete the actor model
+     *
+     * @method DELETE
+     * @author Rohit Vispute (Zignuts Technolab)
+     * @route /actors/{actor}
+     * @authentication Requires user authentication
+     * @middleware sanctum:auth,verified
+     * @param Integet $id
+     */
     public function destroy($id)
     {
         $actor = Actor::findOrFail($id);
@@ -62,6 +131,14 @@ class ActorController extends Controller
         return Redirect::route('actors');
     }
 
+    /**
+     * return an array containing actors name
+     * @method GET
+     * @author Rohit Vispute (Zignuts Technolab)
+     * @route /actors/all
+     * @authentication Requires user authentication
+     * @middleware sanctum:auth,verified
+     */
     public function allActors()
     {
         $actors = Actor::pluck('name');
