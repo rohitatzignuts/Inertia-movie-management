@@ -20,10 +20,12 @@ const editForm = useForm({
 
 // delete the actor's model
 const handleActorDelete = () => {
-    try {
-        router.delete(`/actors/${props.actor.id}`);
-    } catch (error) {
-        console.log(error);
+    if (confirm("Are you sure you want to delete this actor?")) {
+        try {
+            router.delete(`/actors/${props.actor.id}`);
+        } catch (error) {
+            console.error(error);
+        }
     }
 };
 </script>

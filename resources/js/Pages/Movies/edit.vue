@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup>
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import { Head, Link } from "@inertiajs/vue3";
 import { useForm } from "@inertiajs/vue3";
@@ -10,7 +10,7 @@ const props = defineProps({
     movie: Object,
 });
 
-const newActor = ref<string>("");
+const newActor = ref("");
 const actors = ref([]);
 
 const editedActors = ref(
@@ -35,22 +35,23 @@ const addItem = () => {
 };
 
 // Remove an actor from the editedActors array
-const removeChip = (index: number) => {
+const removeChip = (index) => {
     editedActors.value.splice(index, 1);
 };
 
 // handle movie model delete
-const handlemovieDelete = async () => {
-    if (confirm("Are you sure you want to delete this movie?")) {
+const handlemovieDelete = () => {
+    if (confirm("Are you sure you want to delete this Movie?")) {
         try {
             router.visit(`/movies/${props.movie.id}`, {
                 method: "delete",
             });
         } catch (error) {
-            console.error(error);
+            console.log(error);
         }
     }
 };
+
 // fetch all the actor's name
 const actorsNames = () => {
     axios.get("/actors/all").then((res) => {

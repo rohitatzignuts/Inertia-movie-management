@@ -18,7 +18,7 @@ const editForm = useForm({
 });
 
 // handle production model update
-const handleProductionDelete = async () => {
+const handleProductionDelete = () => {
     if (confirm("Are you sure you want to delete this production?")) {
         try {
             router.visit(`/productions/${props.production.id}`, {

@@ -22,7 +22,7 @@ defineProps<{
                 <!-- If the link URL is not null, display a clickable link -->
                 <Link
                     v-else
-                    class="mr-1 mb-1 px-4 py-3 text-sm leading-4 border rounded hover:bg-white focus:border-indigo-500 focus:text-indigo-500"
+                    class="mr-1 mb-1 px-4 py-3 text-sm leading-4 border rounded hover:bg-white hover:text-indigo-500 focus:border-indigo-500 focus:text-indigo-500"
                     :class="{ 'bg-indigo-500 text-white': link.active }"
                     :href="link.url"
                     v-html="link.label"

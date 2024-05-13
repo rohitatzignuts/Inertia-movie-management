@@ -12,6 +12,6 @@ class MovieSeeder extends Seeder
      */
     public function run(): void
     {
-        \App\Models\Movie::factory()->count(25)->create();
+        \App\Models\Movie::factory()->count(15)->create();
     }
 }

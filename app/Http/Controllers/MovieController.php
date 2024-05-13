@@ -165,6 +165,6 @@ class MovieController extends Controller
     {
         $movie = Movie::findOrFail($id);
         $movie->delete();
-        return Redirect::route('movies');
+        return Redirect::route('movies')->with('success', 'Movie deleted.');
     }
 }
