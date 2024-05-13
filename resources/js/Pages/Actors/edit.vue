@@ -3,14 +3,13 @@ import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import { Head, Link } from "@inertiajs/vue3";
 import { useForm } from "@inertiajs/vue3";
 import { router } from "@inertiajs/vue3";
-import { ref, onMounted } from "vue";
-import axios from "axios";
+import { toast } from "vue3-toastify";
+import "vue3-toastify/dist/index.css";
+import TrashedMessage from "../../Shared/TrashedMessage.vue";
 
 const props = defineProps({
     actor: Object,
 });
-
-const delteForm = useForm({});
 
 const editForm = useForm({
     name: props.actor.name,
@@ -18,11 +17,28 @@ const editForm = useForm({
     contact: props.actor.contact,
 });
 
-// delete the actor's model
+// delete the actor model
 const handleActorDelete = () => {
     if (confirm("Are you sure you want to delete this actor?")) {
         try {
             router.delete(`/actors/${props.actor.id}`);
+        } catch (error) {
+            console.error(error);
+        }
+    }
+};
+
+// restore the actor model
+const handleActorRestore = () => {
+    if (confirm("Are you sure you want to delete this record?")) {
+        try {
+            router.put(`/actors/${props.actor.id}/restore`);
+            toast("Item Restored!", {
+                theme: "auto",
+                type: "success",
+                autoClose: 1000,
+                dangerouslyHTMLString: true,
+            });
         } catch (error) {
             console.error(error);
         }
@@ -41,6 +57,11 @@ const handleActorDelete = () => {
                     <span class="text-indigo-400 font-medium">actors/</span>
                     {{ editForm.name }}
                 </h1>
+                <TrashedMessage
+                    v-if="props.actor.deleted_at"
+                    @restore="handleActorRestore"
+                    >This record is deleted do you want to restore it ?
+                </TrashedMessage>
                 <!-- actor info edit form  -->
                 <div class="border p-5">
                     <form
@@ -89,15 +110,16 @@ const handleActorDelete = () => {
                             <button class="w-1/2 bg-red-200 p-2" type="reset">
                                 RESET
                             </button>
-                            <!-- delete action buttton  -->
-                            <button
-                                class="w-1/2 bg-red-400 p-2"
-                                @click="handleActorDelete"
-                            >
-                                DELETE
-                            </button>
                         </div>
                     </form>
+                    <!-- delete action buttton  -->
+                    <button
+                        v-if="!props.actor.deleted_at"
+                        class="w-full bg-red-400 p-2"
+                        @click="handleActorDelete"
+                    >
+                        DELETE
+                    </button>
                 </div>
                 <!-- display movies of the actor  -->
                 <!-- only show the list if available  -->

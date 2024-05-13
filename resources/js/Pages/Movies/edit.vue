@@ -2,9 +2,11 @@
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import { Head, Link } from "@inertiajs/vue3";
 import { useForm } from "@inertiajs/vue3";
-import { router } from "@inertiajs/vue3";
 import { ref, onMounted, watchEffect } from "vue";
 import axios from "axios";
+import TrashedMessage from "../../Shared/TrashedMessage.vue";
+import { toast } from "vue3-toastify";
+import "vue3-toastify/dist/index.css";
 
 const props = defineProps({
     movie: Object,
@@ -12,7 +14,7 @@ const props = defineProps({
 
 const newActor = ref("");
 const actors = ref([]);
-
+const deleteForm = useForm({});
 const editedActors = ref(
     props.movie.actors.length === 0 ? [] : props.movie.actors
 );
@@ -43,8 +45,22 @@ const removeChip = (index) => {
 const handlemovieDelete = () => {
     if (confirm("Are you sure you want to delete this Movie?")) {
         try {
-            router.visit(`/movies/${props.movie.id}`, {
-                method: "delete",
+            deleteForm.delete(`/movies/${props.movie.id}`);
+        } catch (error) {
+            console.log(error);
+        }
+    }
+};
+
+const handleMovieRestore = () => {
+    if (confirm("Are you sure you want to restore this Movie?")) {
+        try {
+            deleteForm.put(`/movies/${props.movie.id}/restore`);
+            toast("Item Restored!", {
+                theme: "auto",
+                type: "success",
+                autoClose: 1000,
+                dangerouslyHTMLString: true,
             });
         } catch (error) {
             console.log(error);
@@ -80,6 +96,11 @@ watchEffect(() => {
                     <span class="text-indigo-400 font-medium">movies/</span>
                     {{ editForm.title }}
                 </h1>
+                <TrashedMessage
+                    v-if="props.movie.deleted_at"
+                    @restore="handleMovieRestore"
+                    >This movie is deleted do you want to restore it ?
+                </TrashedMessage>
                 <!-- update movie model form  -->
                 <div class="border p-5">
                     <form
@@ -183,14 +204,16 @@ watchEffect(() => {
                             <button class="w-1/2 bg-red-200 p-2" type="reset">
                                 RESET
                             </button>
-                            <button
-                                class="w-1/2 bg-red-400 p-2"
-                                @click="handlemovieDelete"
-                            >
-                                DELETE
-                            </button>
                         </div>
                     </form>
+                    <!-- delete movie button  -->
+                    <button
+                        v-if="!props.movie.deleted_at"
+                        class="w-full bg-red-400 p-2"
+                        @click="handlemovieDelete"
+                    >
+                        DELETE
+                    </button>
                 </div>
                 <!-- display actors of the movie  -->
                 <div

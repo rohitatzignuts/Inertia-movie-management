@@ -26,13 +26,21 @@ class MovieController extends Controller
     {
         $request->validate([
             'searchValue' => 'nullable|string',
+            'selectedListing' => 'nullable|string',
         ]);
+        $selectedListing = $request->input('selectedListing');
         $searchValue = $request->input('searchValue');
-        $query = Movie::orderBy('id', 'desc');
-        if ($searchValue) {
-            $query->where('title', 'like', '%' . $searchValue . '%');
-        }
-        $movies = $query->paginate(5);
+        $movies = Movie::orderBy('id', 'desc')
+            ->when($selectedListing === 'withTrashed', function ($query) {
+                $query->withTrashed();
+            })
+            ->when($selectedListing === 'onlyTrashed', function ($query) {
+                $query->onlyTrashed();
+            })
+            ->when($request->input('searchValue'), function ($query, $searchValue) {
+                $query->where('title', 'like', '%' . $searchValue . '%');
+            })
+            ->paginate(5);
         return Inertia::render('Movies/index', [
             'movies' => $movies,
         ]);
@@ -107,7 +115,7 @@ class MovieController extends Controller
      */
     public function edit($id)
     {
-        $movie = Movie::with('actors')->findOrFail($id);
+        $movie = Movie::with('actors')->withTrashed()->findOrFail($id);
         return Inertia::render('Movies/edit', [
             'movie' => $movie,
         ]);
@@ -124,7 +132,7 @@ class MovieController extends Controller
      */
     public function update($id, Request $request)
     {
-        $movie = Movie::findOrFail($id);
+        $movie = Movie::withTrashed()->findOrFail($id);
 
         $request->validate([
             'title' => 'required|string',
@@ -165,6 +173,22 @@ class MovieController extends Controller
     {
         $movie = Movie::findOrFail($id);
         $movie->delete();
-        return Redirect::route('movies')->with('success', 'Movie deleted.');
+        return Redirect::back()->with('success', 'Movie deleted.');
+    }
+
+    /**
+     * retstore the deleted movie model
+     * @method PUT
+     * @author Rohit Vispute (Zignuts Technolab)
+     * @route /movies/{movie}/restore
+     * @authentication Requires user authentication
+     * @middleware sanctum:auth,verified
+     * @param Integer $id
+     */
+    public function restore($id)
+    {
+        $movie = Movie::withTrashed()->findOrFail($id);
+        $movie->restore();
+        return Redirect::back()->with('success', 'Movie restored.');
     }
 }

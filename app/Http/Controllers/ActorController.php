@@ -26,13 +26,24 @@ class ActorController extends Controller
     {
         $request->validate([
             'searchValue' => 'nullable|string',
+            'selectedListing' => 'nullable|string',
         ]);
+
         $searchValue = $request->input('searchValue');
-        $query = Actor::orderBy('id', 'desc');
-        if ($searchValue) {
-            $query->where('name', 'like', '%' . $searchValue . '%');
-        }
-        $actors = $query->paginate(5);
+        $selectedListing = $request->input('selectedListing');
+
+        $actors = Actor::orderBy('id', 'desc')
+            ->when($selectedListing === 'withTrashed', function ($query) {
+                $query->withTrashed();
+            })
+            ->when($selectedListing === 'onlyTrashed', function ($query) {
+                $query->onlyTrashed();
+            })
+            ->when($request->input('searchValue'), function ($query, $searchValue) {
+                $query->where('name', 'like', '%' . $searchValue . '%');
+            })
+            ->paginate(5);
+
         return Inertia::render('Actors/index', [
             'actors' => $actors,
         ]);
@@ -86,7 +97,7 @@ class ActorController extends Controller
      */
     public function edit($id)
     {
-        $actor = Actor::with('movies')->findOrFail($id);
+        $actor = Actor::with('movies')->withTrashed()->findOrFail($id);
         return Inertia::render('Actors/edit', [
             'actor' => $actor,
         ]);
@@ -104,7 +115,7 @@ class ActorController extends Controller
      */
     public function update($id, Request $request)
     {
-        $actor = Actor::findOrFail($id);
+        $actor = Actor::withTrashed()->findOrFail($id);
         $request->validate([
             'name' => 'required|string',
             'email' => ['required', 'string', Rule::unique('actors', 'email')->ignore($actor->id)],
@@ -128,7 +139,7 @@ class ActorController extends Controller
     {
         $actor = Actor::findOrFail($id);
         $actor->delete();
-        return Redirect::route('actors')->with('success', 'Actor Deleted.');
+        return Redirect::back()->with('success', 'actor deleted.');
     }
 
     /**
@@ -143,5 +154,21 @@ class ActorController extends Controller
     {
         $actors = Actor::all();
         return $actors;
+    }
+
+    /**
+     * retstore the deleted actor model
+     * @method PUT
+     * @author Rohit Vispute (Zignuts Technolab)
+     * @route /actors/{actor}/restore
+     * @authentication Requires user authentication
+     * @middleware sanctum:auth,verified
+     * @param Integer $id
+     */
+    public function restore($id)
+    {
+        $actor = Actor::withTrashed()->findOrFail($id);
+        $actor->restore();
+        return Redirect::back()->with('success', 'Actor restored.');
     }
 }

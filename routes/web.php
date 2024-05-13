@@ -33,6 +33,7 @@ Route::middleware(['auth', 'verified'])->prefix('productions')->group(function (
     Route::get('/{production}/edit', [ProductionController::class, 'edit'])->name('productions.edit');
     Route::put('/{production}', [ProductionController::class, 'update'])->name('productions.update');
     Route::delete('/{production}', [ProductionController::class, 'destroy'])->name('productions.destroy');
+    Route::put('/{production}/restore', [ProductionController::class, 'restore'])->name('production.restore');
 });
 
 // movies routes
@@ -43,6 +44,7 @@ Route::middleware(['auth', 'verified'])->prefix('movies')->group(function () {
     Route::get('/{movie}/edit', [MovieController::class, 'edit'])->name('movies.edit');
     Route::put('/{movie}', [MovieController::class, 'update'])->name('movies.update');
     Route::delete('/{movie}', [MovieController::class, 'destroy'])->name('movies.destroy');
+    Route::put('/{movie}/restore', [MovieController::class, 'restore'])->name('movies.restore');
 });
 
 // actors routes
@@ -54,6 +56,8 @@ Route::middleware(['auth', 'verified'])->prefix('actors')->group(function () {
     Route::get('/{actor}/edit', [ActorController::class, 'edit'])->name('actors.edit');
     Route::put('/{actor}', [ActorController::class, 'update'])->name('actors.update');
     Route::delete('/{actor}', [ActorController::class, 'destroy'])->name('actors.destroy');
+    Route::put('/{actor}/restore', [ActorController::class, 'restore'])->name('actors.restore');
+
 });
 
 // profile route

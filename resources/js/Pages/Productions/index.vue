@@ -4,23 +4,11 @@ import { Head, Link } from "@inertiajs/vue3";
 import Pagination from "@/Shared/Pagination.vue";
 import { ref } from "vue";
 import { router } from "@inertiajs/vue3";
+import Filters from "@/Shared/Filters.vue";
 
 defineProps({
     productions: Object,
 });
-
-const searchValue = ref(null);
-
-// get production listing on the production name
-const handleProductionSearch = () => {
-    setTimeout(() => {
-        router.visit("/productions", {
-            method: "get",
-            data: { searchValue: searchValue.value },
-            preserveState: true,
-        });
-    }, 150);
-};
 </script>
 
 <template>
@@ -37,18 +25,7 @@ const handleProductionSearch = () => {
             <!-- main content  -->
             <div class="max-w-7xl mt-4 mx-auto sm:px-6 lg:px-8">
                 <div class="flex justify-between my-4">
-                    <div>
-                        <!-- search input  -->
-                        <input
-                            v-model="searchValue"
-                            id="searchForm"
-                            name="searchForm"
-                            type="search"
-                            class="rounded-sm border-indigo-400 border-l-8"
-                            placeholder="search..."
-                            @input="handleProductionSearch"
-                        />
-                    </div>
+                    <Filters :url="`/productions`" />
                     <!-- create production button  -->
                     <Link
                         href="/productions/create"
@@ -83,12 +60,12 @@ const handleProductionSearch = () => {
                                         class="flex items-center px-6 py-4 focus:text-indigo-500"
                                         :href="`/productions/${production.id}/edit`"
                                     >
-                                        {{ production.name }}
-                                        <!-- <icon
+                                        {{ production.name
+                                        }}<sup
                                             v-if="production.deleted_at"
-                                            name="trash"
-                                            class="shrink-0 ml-2 w-3 h-3 fill-gray-400"
-                                        /> -->
+                                            class="ms-1 text-red-300"
+                                            >✗</sup
+                                        >
                                     </Link>
                                 </td>
                                 <!-- production city  -->

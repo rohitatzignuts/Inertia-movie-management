@@ -3,6 +3,9 @@ import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import { Head, Link } from "@inertiajs/vue3";
 import { useForm } from "@inertiajs/vue3";
 import { router } from "@inertiajs/vue3";
+import TrashedMessage from "../../Shared/TrashedMessage.vue";
+import { toast } from "vue3-toastify";
+import "vue3-toastify/dist/index.css";
 
 const props = defineProps({
     production: Object,
@@ -29,6 +32,23 @@ const handleProductionDelete = () => {
         }
     }
 };
+
+// handle production model restore
+const handleProductionRestore = () => {
+    if (confirm("Are you sure you want to restore this production?")) {
+        try {
+            router.put(`/productions/${props.production.id}/restore`);
+            toast("Item Restored!", {
+                theme: "auto",
+                type: "success",
+                autoClose: 1000,
+                dangerouslyHTMLString: true,
+            });
+        } catch (error) {
+            console.error(error);
+        }
+    }
+};
 </script>
 
 <template>
@@ -44,6 +64,11 @@ const handleProductionDelete = () => {
                     >
                     {{ editForm.name }}
                 </h1>
+                <TrashedMessage
+                    v-if="props.production.deleted_at"
+                    @restore="handleProductionRestore"
+                    >This production is deleted do you want to restore it ?
+                </TrashedMessage>
                 <!-- production model update form  -->
                 <div class="border p-5">
                     <form
@@ -121,14 +146,16 @@ const handleProductionDelete = () => {
                             <button class="w-1/2 bg-red-200 p-2" type="reset">
                                 RESET
                             </button>
-                            <button
-                                class="w-1/2 bg-red-400 p-2"
-                                @click="handleProductionDelete"
-                            >
-                                DELETE
-                            </button>
                         </div>
                     </form>
+                    <!-- delete production button  -->
+                    <button
+                        v-if="!props.production.deleted_at"
+                        class="w-full bg-red-400 p-2"
+                        @click="handleProductionDelete"
+                    >
+                        DELETE
+                    </button>
                 </div>
             </div>
             <!-- display movie of the production  -->

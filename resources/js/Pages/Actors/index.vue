@@ -2,25 +2,11 @@
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import { Head, Link } from "@inertiajs/vue3";
 import Pagination from "@/Shared/Pagination.vue";
-import { ref } from "vue";
-import { router } from "@inertiajs/vue3";
+import Filters from "@/Shared/Filters.vue";
 
 defineProps({
     actors: Object,
 });
-
-const searchValue = ref(null);
-
-// handle user searchInput for actors
-const handleActorsearch = () => {
-    setTimeout(() => {
-        router.visit("/actors", {
-            method: "get",
-            data: { searchValue: searchValue.value },
-            preserveState: true,
-        });
-    }, 150);
-};
 </script>
 
 <template>
@@ -40,17 +26,7 @@ const handleActorsearch = () => {
                 <!-- actions  -->
                 <div class="flex justify-between my-4">
                     <!-- search input  -->
-                    <div>
-                        <input
-                            v-model="searchValue"
-                            id="searchForm"
-                            name="searchForm"
-                            type="search"
-                            class="rounded-sm border-indigo-400 border-l-8"
-                            placeholder="search..."
-                            @input="handleActorsearch"
-                        />
-                    </div>
+                    <Filters :url="`/actors`" />
                     <!-- create production link  -->
                     <Link
                         href="/actors/create"
@@ -85,11 +61,11 @@ const handleActorsearch = () => {
                                         :href="`/actors/${actor.id}/edit`"
                                     >
                                         {{ actor.name }}
-                                        <!-- <icon
+                                        <sup
                                             v-if="actor.deleted_at"
-                                            name="trash"
-                                            class="shrink-0 ml-2 w-3 h-3 fill-gray-400"
-                                        /> -->
+                                            class="ms-1 text-red-300"
+                                            >✗</sup
+                                        >
                                     </Link>
                                 </td>
                                 <!-- actor email column  -->

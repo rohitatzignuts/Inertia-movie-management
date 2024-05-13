@@ -21,22 +21,26 @@ class ProductionController extends Controller
      */
     public function index(Request $request)
     {
-        try {
-            $request->validate([
-                'searchValue' => 'nullable|string',
-            ]);
-            $searchValue = $request->input('searchValue');
-            $query = Production::orderBy('id', 'desc');
-            if ($searchValue) {
+        $request->validate([
+            'searchValue' => 'nullable|string',
+            'selectedListing' => 'nullable|string',
+        ]);
+        $selectedListing = $request->input('selectedListing');
+        $productions = Production::orderBy('id', 'desc')
+            ->when($selectedListing === 'withTrashed', function ($query) {
+                $query->withTrashed();
+            })
+            ->when($selectedListing === 'onlyTrashed', function ($query) {
+                $query->onlyTrashed();
+            })
+            ->when($request->input('searchValue'), function ($query, $searchValue) {
                 $query->where('name', 'like', '%' . $searchValue . '%');
-            }
-            $productions = $query->paginate(5);
-            return Inertia::render('Productions/index', [
-                'productions' => $productions,
-            ]);
-        } catch (\Throwable $th) {
-            return response()->json($th, $headers);
-        }
+            })
+            ->paginate(5);
+
+        return Inertia::render('Productions/index', [
+            'productions' => $productions,
+        ]);
     }
 
     /**
@@ -89,7 +93,7 @@ class ProductionController extends Controller
      */
     public function edit($id)
     {
-        $production = Production::with('movies')->findOrFail($id);
+        $production = Production::with('movies')->withTrashed()->findOrFail($id);
         return Inertia::render('Productions/edit', [
             'production' => $production,
         ]);
@@ -106,7 +110,7 @@ class ProductionController extends Controller
      */
     public function update($id, Request $request)
     {
-        $production = Production::findOrFail($id);
+        $production = Production::withTrashed()->findOrFail($id);
         $production->update(
             $request->validate([
                 'name' => 'string|required',
@@ -133,7 +137,23 @@ class ProductionController extends Controller
     {
         $production = Production::findOrFail($id);
         $production->delete();
-        return Redirect::route('productions')->with('success', 'Production deleted.');
+        return Redirect::back()->with('success', 'Production deleted.');
+    }
+
+    /**
+     * retstore the deleted production model
+     * @method PUT
+     * @author Rohit Vispute (Zignuts Technolab)
+     * @route /productions/{production}/restore
+     * @authentication Requires user authentication
+     * @middleware sanctum:auth,verified
+     * @param Integer $id
+     */
+    public function restore($id)
+    {
+        $production = Production::withTrashed()->findOrFail($id);
+        $production->restore();
+        return Redirect::back()->with('success', 'Production restored.');
     }
 
     /**
