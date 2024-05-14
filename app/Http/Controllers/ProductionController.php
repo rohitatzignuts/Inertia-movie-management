@@ -36,7 +36,8 @@ class ProductionController extends Controller
             ->when($request->input('searchValue'), function ($query, $searchValue) {
                 $query->where('name', 'like', '%' . $searchValue . '%');
             })
-            ->paginate(5);
+            ->paginate(5)
+            ->withQueryString();
 
         return Inertia::render('Productions/index', [
             'productions' => $productions,

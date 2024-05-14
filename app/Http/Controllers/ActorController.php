@@ -42,7 +42,7 @@ class ActorController extends Controller
             ->when($request->input('searchValue'), function ($query, $searchValue) {
                 $query->where('name', 'like', '%' . $searchValue . '%');
             })
-            ->paginate(5);
+            ->paginate(5)->withQueryString();
 
         return Inertia::render('Actors/index', [
             'actors' => $actors,

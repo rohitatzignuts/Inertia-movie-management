@@ -40,7 +40,7 @@ class MovieController extends Controller
             ->when($request->input('searchValue'), function ($query, $searchValue) {
                 $query->where('title', 'like', '%' . $searchValue . '%');
             })
-            ->paginate(5);
+            ->paginate(5)->withQueryString();
         return Inertia::render('Movies/index', [
             'movies' => $movies,
         ]);
