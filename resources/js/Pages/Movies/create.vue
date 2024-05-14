@@ -1,14 +1,13 @@
-<script setup lang="ts">
+<script setup>
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import { Head } from "@inertiajs/vue3";
 import { useForm } from "@inertiajs/vue3";
 import { ref, onMounted } from "vue";
 import axios from "axios";
-import SelectActorsDropdown from "./Partials/SelectActorsDropdown.vue";
 
 const productions = ref([]);
 const actors = ref([]);
-const newActor = ref<string>("");
+const newActor = ref("");
 
 const movieCreateForm = useForm({
     title: null,
@@ -43,7 +42,7 @@ const addItem = () => {
 };
 
 // remove actors name from the actors array
-const removeChip = (index: number) => {
+const removeChip = (index) => {
     movieCreateForm.actors.splice(index, 1);
 };
 
@@ -86,7 +85,6 @@ onMounted(() => {
                             <!-- movie genre select feild  -->
                             <select
                                 v-model="movieCreateForm.genre"
-                                placeholder="genre"
                                 class="w-1/2"
                                 required
                             >

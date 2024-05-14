@@ -96,6 +96,7 @@ watchEffect(() => {
                     <span class="text-indigo-400 font-medium">movies/</span>
                     {{ editForm.title }}
                 </h1>
+                <!-- trashed message  -->
                 <TrashedMessage
                     v-if="props.movie.deleted_at"
                     @restore="handleMovieRestore"

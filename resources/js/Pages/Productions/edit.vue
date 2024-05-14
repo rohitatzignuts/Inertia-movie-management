@@ -64,6 +64,7 @@ const handleProductionRestore = () => {
                     >
                     {{ editForm.name }}
                 </h1>
+                <!-- trashed message  -->
                 <TrashedMessage
                     v-if="props.production.deleted_at"
                     @restore="handleProductionRestore"

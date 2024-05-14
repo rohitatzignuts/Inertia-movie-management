@@ -57,6 +57,7 @@ const handleActorRestore = () => {
                     <span class="text-indigo-400 font-medium">actors/</span>
                     {{ editForm.name }}
                 </h1>
+                <!-- trashed message  -->
                 <TrashedMessage
                     v-if="props.actor.deleted_at"
                     @restore="handleActorRestore"

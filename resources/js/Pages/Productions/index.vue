@@ -2,8 +2,6 @@
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import { Head, Link } from "@inertiajs/vue3";
 import Pagination from "@/Shared/Pagination.vue";
-import { ref } from "vue";
-import { router } from "@inertiajs/vue3";
 import Filters from "@/Shared/Filters.vue";
 
 defineProps({

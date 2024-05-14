@@ -50,7 +50,7 @@ const handleListingType = () => {
                 class="rounded-sm border-indigo-400 border-r-8"
                 @change="handleListingType"
             >
-                <option value="select" disabled selected>select</option>
+                <option value="tashed" disabled selected>tashed</option>
                 <option value="withTrashed">with trashed</option>
                 <option value="onlyTrashed">only trashed</option>
             </select>
