@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Redirect;
 use App\Models\Actor;
 use App\Models\Movie;
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Auth;
 
 class ActorController extends Controller
 {
@@ -31,7 +32,6 @@ class ActorController extends Controller
 
         $searchValue = $request->input('searchValue');
         $selectedListing = $request->input('selectedListing');
-
         $actors = Actor::orderBy('id', 'desc')
             ->when($selectedListing === 'withTrashed', function ($query) {
                 $query->withTrashed();
@@ -42,7 +42,8 @@ class ActorController extends Controller
             ->when($request->input('searchValue'), function ($query, $searchValue) {
                 $query->where('name', 'like', '%' . $searchValue . '%');
             })
-            ->paginate(5)->withQueryString();
+            ->paginate(5)
+            ->withQueryString();
 
         return Inertia::render('Actors/index', [
             'actors' => $actors,
